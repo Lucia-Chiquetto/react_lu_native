@@ -1,54 +1,130 @@
-# 📱 React Lu Native
+# 🧑‍💻 React Lu Native
 
-This is a mobile app project built using React Native and Expo, created to practice and reinforce essential concepts in mobile development, interface design, and app functionality.
+This repository contains a web application developed as part of the Systems Analysis and Development course at PUCPR (Pontifical Catholic University of Paraná). The project is built using React for the frontend architecture and Firebase as a backend platform for authentication and real-time data storage.
 
-## 🚀 Technologies Used
+## ⚙️ Technologies Used
 
-- [React Native](https://reactnative.dev/)
-- [Expo](https://expo.dev/)
-- [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+- **React (CRA)** – JavaScript library for building declarative, component-based user interfaces
+- **React Router DOM** – SPA (Single Page Application) routing management
+- **Firebase (BaaS)**:
+  - **Firebase Authentication** – Email/password login system
+  - **Cloud Firestore** – Real-time NoSQL database
+- **JavaScript (ES6+)**
+- **HTML5 & CSS3**
 
-## 📦 Installation
+## 🧱 Project Architecture
+
+The project follows a modular, domain-driven folder structure:
+
+```
+
+react\_lu\_native/
+├── public/
+├── src/
+│   ├── components/       # Reusable UI components
+│   ├── pages/            # Application views/pages
+│   ├── services/         # Firebase integration (auth and database)
+│   ├── context/          # Global state using React Context API
+│   ├── routes/           # Public and protected route definitions
+│   ├── App.js            # Main application component
+│   └── index.js          # Entry point
+
+````
+
+## 🔐 Firebase Authentication
+
+User authentication is handled via Firebase Authentication:
+
+- Sign up and login with email and password
+- Session persistence across reloads
+- Protected routes based on user authentication state
+
+### Example: Authentication Context
+
+```js
+import { createContext, useContext, useEffect, useState } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../services/firebase';
+
+const AuthContext = createContext();
+
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, setUser);
+    return () => unsubscribe();
+  }, []);
+
+  return <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>;
+};
+
+export const useAuth = () => useContext(AuthContext);
+````
+
+## 🧮 Firestore Integration
+
+We use Cloud Firestore to store and retrieve real-time data. The data is structured in collections per user or domain entity.
+
+### Example: Create operation (CRUD)
+
+```js
+import { db } from './firebase';
+import { collection, addDoc } from 'firebase/firestore';
+
+const addItem = async (itemData) => {
+  const itemsRef = collection(db, 'items');
+  await addDoc(itemsRef, itemData);
+};
+```
+
+## 🚀 How to Run Locally
 
 1. Clone the repository:
-   ```bash
-   git clone https://github.com/Lucia-Chiquetto/react_lu_native.git
 
-2. Navigate to the project directory:
+```bash
+git clone https://github.com/Lucia-Chiquetto/react_lu_native.git
+cd react_lu_native
+```
 
-   ```bash
-   cd react_lu_native
-   ```
+2. Install the dependencies:
 
-3. Install dependencies:
+```bash
+npm install
+```
 
-   ```bash
-   npm install
-   ```
+3. Set up your Firebase project:
 
-4. Start the development server:
+* Create a project on [Firebase Console](https://console.firebase.google.com/)
+* Enable Authentication (Email/Password) and Firestore Database
+* Create a `.env` file with your Firebase credentials:
 
-   ```bash
-   npm start
-   ```
+```
+VITE_API_KEY=your_key
+VITE_AUTH_DOMAIN=your_project.firebaseapp.com
+VITE_PROJECT_ID=your_project_id
+VITE_STORAGE_BUCKET=your_bucket
+VITE_MESSAGING_SENDER_ID=your_sender_id
+VITE_APP_ID=your_app_id
+```
 
-   Expo will open a window in your browser. Use the **Expo Go** app on your mobile device to scan the QR code and run the application.
+4. Run the development server:
 
-## 🧠 Project Goals
+```bash
+npm start
+```
 
-* Practice building functional components
-* Understand navigation between screens
-* Style components using React Native’s `StyleSheet`
-* Get familiar with the mobile app development workflow
+## 🔒 Public and Private Routes
 
-## 📸 Screenshots
+Routing is handled using React Router with guards to restrict access to authenticated users:
 
-*Feel free to add screenshots here to showcase your app's features.*
+```jsx
+<Route
+  path="/dashboard"
+  element={user ? <Dashboard /> : <Navigate to="/login" />}
+/>
+```
 
-## 🤝 Contributions
+## 📜 License
 
-Contributions are welcome! Feel free to open issues or submit pull requests with improvements and suggestions.
-
-## 📄 License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
+This project is licensed under the MIT License.
