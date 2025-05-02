@@ -4,14 +4,14 @@ import 'firebase/auth'
 
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAGSXXbhrAWqSCnWBX1deVWUzqr9pw75Pg",
-  authDomain: "sistemaweb2025-1a914.firebaseapp.com",
-  projectId: "sistemaweb2025-1a914",
-  storageBucket: "sistemaweb2025-1a914.firebasestorage.app",
-  messagingSenderId: "312777645865",
-  appId: "1:312777645865:web:803aff93868cb45bb66138",
-  measurementId: "G-W9N1VXJGR3"
-};
+    apiKey: "AIzaSyB9mzJRQF5veVUTGw4n7Xlxct1CKOOAq9k",
+    authDomain: "reactlunative.firebaseapp.com",
+    projectId: "reactlunative",
+    storageBucket: "reactlunative.firebasestorage.app",
+    messagingSenderId: "382271154633",
+    appId: "1:382271154633:web:d58039da31b2d8be102018",
+    measurementId: "G-BWBQ7ZTPV2"
+  };
 
 if(!firebase.apps.length){
     firebase.initializeApp(firebaseConfig)
